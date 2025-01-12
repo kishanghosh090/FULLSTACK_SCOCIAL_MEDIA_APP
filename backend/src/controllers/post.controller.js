@@ -8,6 +8,6 @@ const deletePost = async (req, res) => {};
 const updatePost = async (req, res) => {};
 
 // get post controller
-const getPost = async (req, res) => {};
+const getAllPost = async (req, res) => {};
 
-export { createPost, deletePost, updatePost, getPost };
+export { createPost, deletePost, updatePost, getAllPost };
