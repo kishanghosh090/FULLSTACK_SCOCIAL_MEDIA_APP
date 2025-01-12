@@ -5,9 +5,9 @@ import {
   login,
   logout,
   getUserProfile,
-  getUserPosts,
   updateUserProfile,
 } from "../controllers/user.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
@@ -18,9 +18,7 @@ router.post("/login", login);
 // logout route
 router.get("/logout", logout);
 // get user profile route
-router.get("/getUserProfile", getUserProfile);
-// get user posts route
-router.get("/getUserPosts", getUserPosts);
+router.get("/getUserProfile", verifyJWT, getUserProfile);
 // update user profile route
 router.put("/updateUserProfile", updateUserProfile);
 

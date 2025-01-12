@@ -5,15 +5,16 @@ import {
   updatePost,
   getAllPost,
 } from "../controllers/post.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
 // create post route
-router.post("/createPost", createPost);
+router.post("/createPost", verifyJWT, createPost);
 // delete post route
-router.delete("/deletePost", deletePost);
+router.delete("/deletePost", verifyJWT, deletePost);
 // update post route
-router.put("/updatePost", updatePost);
+router.put("/updatePost", verifyJWT, updatePost);
 // get post route
 router.get("/getAllPost", getAllPost);
 
