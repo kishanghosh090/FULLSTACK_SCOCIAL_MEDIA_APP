@@ -1,9 +1,9 @@
 import { User } from "../models/user.models.js";
 import { ApiError } from "../utils/ApiError.js";
-import { asyncHandler } from "../utils/asyncHandler.js";
+
 import jwt from "jsonwebtoken";
 
-const verifyJWT = asyncHandler(async (req, res, next) => {
+const verifyJWT = async (req, res, next) => {
   try {
     //check for token from cookies
     const token =
@@ -28,6 +28,6 @@ const verifyJWT = asyncHandler(async (req, res, next) => {
   } catch (error) {
     return next(new ApiError(401, error.message || "Unauthorized"));
   }
-});
+};
 
 export { verifyJWT };

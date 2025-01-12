@@ -33,7 +33,7 @@ app.use("/api/v1/user", userRoute);
 app.use("/api/v1/post", postRoute);
 
 // error handler middleware--------------------
-app.use((err, _, _, next) => {
+app.use((err, req, res, next) => {
   if (err instanceof ApiError) {
     return res
       .status(err.statusCode)
