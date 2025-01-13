@@ -33,5 +33,6 @@ router.post("/commentPost", verifyJWT, createComment);
 router.put("/updateComment", verifyJWT, updateComment);
 // delete comment route
 router.delete("/deleteComment", verifyJWT, deleteComment);
+
 // export router
 export default router;

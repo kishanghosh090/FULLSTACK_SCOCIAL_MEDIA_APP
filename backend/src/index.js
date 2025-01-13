@@ -4,10 +4,11 @@ import connectDB from "./db/index.js";
 
 const port = process.env.PORT || 3000;
 
+// connect to database
 connectDB()
   .then(() => {
     app.listen(port, () => {
-      console.log(`Server running on port ${port}`);
+      console.log(`Server running on PORT ${port}`);
     });
   })
   .catch((error) => {
