@@ -92,10 +92,14 @@ const login = async (req, res, next) => {
       next(new ApiError(404, "User not found"));
     }
 
-    const isPasswordCorrect = await user.isPasswordCorrect(password);
-
-    if (!isPasswordCorrect) {
-      return next(new ApiError(400, "Password is incorrect"));
+    // check for password
+    try {
+      const isPasswordCorrect = await user.isPasswordCorrect(password);
+      if (!isPasswordCorrect) {
+        return next(new ApiError(400, "Password is incorrect"));
+      }
+    } catch (error) {
+      next(new ApiError(500, error.message || "Internal Server Error"));
     }
 
     // generate token
@@ -124,12 +128,79 @@ const login = async (req, res, next) => {
 };
 
 //logout controller
-const logout = async (req, res) => {};
+const logout = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
+
+    // get user
+    const user = await User.findById(userId);
+
+    // delete token from user
+    user.token = null;
+    await user.save();
+
+    res
+      .status(200)
+      .clearCookie("token")
+      .json(new ApiResponse(200, "User logged out successfully"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
 
 //get user profile controller
-const getUserProfile = async (req, res) => {};
+const getUserProfile = async (req, res, next) => {
+  try {
+    const userId = req.user;
 
-//update user profile controller
-const updateUserProfile = async (req, res) => {};
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
 
-export { register, login, logout, getUserProfile, updateUserProfile };
+    // get user
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, "User profile fetched successfully", user));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
+
+// update user profilePic controller
+const updateUserProfilePic = async (req, res, next) => {};
+
+//update user username controller
+const updateUserUsername = async (req, res, next) => {};
+
+//update user phone number controller
+const updateUserPhonenumber = async (req, res, next) => {};
+
+//update user password controller
+const updateUserPassword = async (req, res, next) => {};
+
+// forget password
+const forgetPassword = async (req, res, next) => {};
+
+export {
+  register,
+  login,
+  logout,
+  getUserProfile,
+  updateUserProfilePic,
+  updateUserUsername,
+  updateUserPhonenumber,
+  updateUserPassword,
+  forgetPassword,
+};
