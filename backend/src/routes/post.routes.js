@@ -14,13 +14,14 @@ import {
 
 // auth middleware
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = express.Router();
 
 // create post route
-router.post("/createPost", verifyJWT, createPost);
+router.post("/createPost", verifyJWT, upload.single("image"), createPost);
 // delete post route
-router.delete("/deletePost", verifyJWT, deletePost);
+router.delete("/deletePost/:id", verifyJWT, deletePost);
 // update post route
 router.put("/updatePost", verifyJWT, updatePost);
 // get post route
