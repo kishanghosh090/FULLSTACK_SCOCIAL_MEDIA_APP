@@ -6,6 +6,7 @@ import { Toaster } from "react-hot-toast";
 import { getMessageSuccess, getMessageError } from "../../hooks/Popups.jsx";
 import { motion } from "framer-motion";
 
+
 function Login() {
   const navigate = useNavigate();
   const [data, setData] = useState({
@@ -21,7 +22,32 @@ function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    getMessageSuccess("Login successful");
+    if (email === "" && phoneNumber === "") {
+      getMessageError("email or phone number is required");
+      return;
+    }
+    if (password === "") {
+      getMessageError("password is required");
+      return;
+    }
+    setLoading(true);
+    axios
+      .post(`/api/v1/user/login`, data)
+      .then((res) => {
+        setLoading(false);
+        getMessageSuccess("user login successfully");
+        navigate("/home", { replace: true });
+        console.log(res);
+        return;
+      })
+      .catch(async (error) => {
+        setLoading(false);
+        getMessageError(error.response.data.data);
+        console.log("====================================");
+        console.log(error);
+        console.log("====================================");
+        return;
+      });
   };
   return (
     <div className="loginContainer flex flex-col gap-4 justify-center items-center h-screen bg-gradient-to-t from-pink-300 to-purple-300  ">

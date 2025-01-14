@@ -179,7 +179,7 @@ const getUserProfile = async (req, res, next) => {
     // send response
     res
       .status(200)
-      .json(new ApiResponse(200, "User profile fetched successfully", user));
+      .json(new ApiResponse(200, user, "User profile fetched successfully"));
   } catch (error) {
     return next(new ApiError(500, error.message || "Internal Server Error"));
   }

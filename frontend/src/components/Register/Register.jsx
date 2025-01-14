@@ -5,7 +5,7 @@ import { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
-import { baseUrl } from "../../baseUrl.js";
+
 
 function Register() {
   const navigate = useNavigate();
@@ -36,7 +36,7 @@ function Register() {
     setLoading(true);
 
     axios
-      .post(`${baseUrl}/api/v1/user/register`, data)
+      .post(`/api/v1/user/register`, data)
       .then((res) => {
         setLoading(false);
         getMessageSuccess("user register successfully");
