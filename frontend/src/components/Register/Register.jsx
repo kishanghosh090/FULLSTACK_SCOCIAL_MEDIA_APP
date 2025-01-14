@@ -6,7 +6,6 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { motion } from "framer-motion";
 
-
 function Register() {
   const navigate = useNavigate();
   const [data, setData] = useState({
@@ -36,7 +35,7 @@ function Register() {
     setLoading(true);
 
     axios
-      .post(`/api/v1/user/register`, data)
+      .post(`${import.meta.env.BASE_URL}/api/v1/user/register`, data)
       .then((res) => {
         setLoading(false);
         getMessageSuccess("user register successfully");
@@ -46,21 +45,18 @@ function Register() {
       })
       .catch(async (error) => {
         setLoading(false);
-        getMessageError(error.response.data.data);
-        setTimeout(() => {
-          navigate("/login", { replace: true });
-        }, 1200);
+        getMessageError(error.response.data.message);
         return;
       });
   };
   return (
     <div className="loginContainer flex flex-col gap-4 justify-center items-center h-screen bg-gradient-to-t from-pink-300 to-purple-300 ">
       <Toaster />
-          <motion.div
-              initial={{ opacity: 0,transform: "translatex(-100px)" }}
-              animate={{ opacity: 1,transform: "translateX(0)" }}
-
-              className="flex flex-col gap-4 bg-[rgba(255,255,255,0.2] w-[90%] text-black md:w-[30%] rounded-3xl shadow-xl border-1 backdrop-blur-xl">
+      <motion.div
+        initial={{ opacity: 0, transform: "translatex(-100px)" }}
+        animate={{ opacity: 1, transform: "translateX(0)" }}
+        className="flex flex-col gap-4 bg-[rgba(255,255,255,0.2] w-[90%] text-black md:w-[30%] rounded-3xl shadow-xl border-1 backdrop-blur-xl"
+      >
         <form
           onSubmit={handleSubmit}
           className="login flex flex-col gap-4 px-4 py-2"
