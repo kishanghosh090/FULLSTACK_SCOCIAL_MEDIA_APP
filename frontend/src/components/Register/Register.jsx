@@ -35,7 +35,7 @@ function Register() {
     setLoading(true);
 
     axios
-      .post(`${import.meta.env.BASE_URL}/api/v1/user/register`, data)
+      .post(`/api/v1/user/register`, data)
       .then((res) => {
         setLoading(false);
         getMessageSuccess("user register successfully");
