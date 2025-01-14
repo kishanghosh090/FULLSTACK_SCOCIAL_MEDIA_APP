@@ -7,8 +7,8 @@ import {
   getUserProfile,
   updateUserProfilePic,
   forgetPassword,
-  updateUserUsername,
-  updateUserPhonenumber,
+  updateUserUserName,
+  updateUserPhoneNumber,
   updateUserPassword,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
@@ -33,9 +33,9 @@ router.put(
   updateUserProfilePic
 );
 // update user username route
-router.put("/updateUserUsername", verifyJWT, updateUserUsername);
+router.put("/updateUserUsername", verifyJWT, updateUserUserName);
 // update user phone number route
-router.put("/updateUserPhonenumber", verifyJWT, updateUserPhonenumber);
+router.put("/updateUserPhonenumber", verifyJWT, updateUserPhoneNumber);
 // update user password route
 router.put("/updateUserPassword", verifyJWT, updateUserPassword);
 

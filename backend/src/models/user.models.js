@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 const userSchema = new mongoose.Schema(
   {
-    username: {
+    userName: {
       type: String,
       required: true,
     },
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    phonenumber: {
+    phoneNumber: {
       type: String,
       required: true,
     },

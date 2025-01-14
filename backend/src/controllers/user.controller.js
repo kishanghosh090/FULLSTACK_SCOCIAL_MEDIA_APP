@@ -22,14 +22,14 @@ const generateToken = async (userId, next) => {
 const register = async (req, res, next) => {
   try {
     // get user input from body
-    const { username, email, password, phonenumber } = req.body;
+    const { userName, email, password, phoneNumber } = req.body;
 
     // check for empty fields
-    if ([username, email, password, phonenumber].some((item) => !item)) {
+    if ([userName, email, password, phoneNumber].some((item) => !item)) {
       return next(new ApiError(400, "All fields are required"));
     }
     // check for invalid phone number
-    if (phonenumber.length !== 10 || isNaN(phonenumber)) {
+    if (phoneNumber.length !== 10 || isNaN(phoneNumber)) {
       return next(new ApiError(400, "Phone number is invalid"));
     }
     // check for invalid email
@@ -37,12 +37,18 @@ const register = async (req, res, next) => {
       return next(new ApiError(400, "Email is invalid"));
     }
 
+    // check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return next(new ApiError(400, "User already exists"));
+    }
+
     // create user
     const user = await User.create({
-      username,
+      userName,
       email,
       password,
-      phonenumber,
+      phoneNumber,
     });
 
     if (!user) {
@@ -62,15 +68,15 @@ const register = async (req, res, next) => {
 const login = async (req, res, next) => {
   try {
     // get user input from body
-    const { email, phonenumber, password } = req.body;
+    const { email, phoneNumber, password } = req.body;
 
     // check for empty fields
-    if (!email && !phonenumber) {
+    if (!email && !phoneNumber) {
       return next(new ApiError(400, "Email or phone number is required"));
     }
 
     // check for invalid phone number
-    if ((phonenumber && phonenumber.length !== 10) || isNaN(phonenumber)) {
+    if ((phoneNumber && phoneNumber.length !== 10) || isNaN(phoneNumber)) {
       return next(new ApiError(400, "Phone number is invalid"));
     }
 
@@ -85,7 +91,7 @@ const login = async (req, res, next) => {
 
     // check for user
     const user = await User.findOne({
-      $or: [{ email }, { phonenumber }],
+      $or: [{ email }, { phoneNumber }],
     });
 
     // if user not found
@@ -217,8 +223,8 @@ const updateUserProfilePic = async (req, res, next) => {
   }
 };
 
-//update user username controller
-const updateUserUsername = async (req, res, next) => {
+//update user userName controller
+const updateUserUserName = async (req, res, next) => {
   try {
     const userId = req.user;
 
@@ -227,9 +233,9 @@ const updateUserUsername = async (req, res, next) => {
       return next(new ApiError(401, "Unauthorized"));
     }
 
-    const { username } = req.body;
-    if (!username) {
-      return next(new ApiError(400, "Username is required"));
+    const { userName } = req.body;
+    if (!userName) {
+      return next(new ApiError(400, "userName is required"));
     }
 
     // get user
@@ -239,20 +245,20 @@ const updateUserUsername = async (req, res, next) => {
     }
 
     // update user
-    user.username = username;
+    user.userName = userName;
     await user.save({ validateBeforeSave: false });
 
     // send response
     res
       .status(200)
-      .json(new ApiResponse(200, user, "User username updated successfully"));
+      .json(new ApiResponse(200, user, "User userName updated successfully"));
   } catch (error) {
     return next(new ApiError(500, error.message || "Internal Server Error"));
   }
 };
 
 //update user phone number controller
-const updateUserPhonenumber = async (req, res, next) => {
+const updateUserPhoneNumber = async (req, res, next) => {
   try {
     const userId = req.user;
 
@@ -260,12 +266,12 @@ const updateUserPhonenumber = async (req, res, next) => {
     if (!userId) {
       return next(new ApiError(401, "Unauthorized"));
     }
-    const { phonenumber } = req.body;
-    if (!phonenumber) {
+    const { phoneNumber } = req.body;
+    if (!phoneNumber) {
       return next(new ApiError(400, "Phone number is required"));
     }
     // check for invalid phone number
-    if (phonenumber.length !== 10 || isNaN(phonenumber)) {
+    if (phoneNumber.length !== 10 || isNaN(phoneNumber)) {
       return next(new ApiError(400, "Phone number is invalid"));
     }
 
@@ -276,7 +282,7 @@ const updateUserPhonenumber = async (req, res, next) => {
     }
 
     // update user
-    user.phonenumber = phonenumber;
+    user.phoneNumber = phoneNumber;
     await user.save({ validateBeforeSave: false });
 
     // send response
@@ -337,8 +343,8 @@ export {
   logout,
   getUserProfile,
   updateUserProfilePic,
-  updateUserUsername,
-  updateUserPhonenumber,
+  updateUserUserName,
+  updateUserPhoneNumber,
   updateUserPassword,
   forgetPassword,
 };
