@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Button } from "@nextui-org/react";
 import { Toaster } from "react-hot-toast";
 import { getMessageSuccess, getMessageError } from "../../hooks/Popups.jsx";
+import { motion } from "framer-motion";
+
 function Login() {
   const navigate = useNavigate();
   const [data, setData] = useState({
@@ -21,16 +24,18 @@ function Login() {
     getMessageSuccess("Login successful");
   };
   return (
-    <div className="loginContainer flex flex-col gap-4 justify-center items-center h-screen ">
+    <div className="loginContainer flex flex-col gap-4 justify-center items-center h-screen bg-gradient-to-t from-pink-300 to-purple-300  ">
       <Toaster />
-      <div className="loginForm flex flex-col gap-4 bg-slate-200 w-[90%] text-black md:w-[30%] rounded-2xl shadow-xl">
+      <motion.div
+        initial={{ opacity: 0, transform: "translatex(100px)" }}
+        animate={{ opacity: 1, transform: "translateX(0)" }}
+        className="flex flex-col gap-4 bg-[rgba(255,255,255,0.2] w-[90%] text-black md:w-[30%] rounded-3xl shadow-xl border-1 backdrop-blur-xl"
+      >
         <form
           onSubmit={handleSubmit}
           className="login flex flex-col gap-4 px-4 py-2"
         >
-          <h1 className="text-3xl text-center font-extrabold bg-slate-100 py-2">
-            Login
-          </h1>
+          <h1 className="text-3xl text-center font-extrabold  py-2">Sign In</h1>
 
           <label htmlFor="email">Email</label>
           <input
@@ -74,11 +79,13 @@ function Login() {
           <Link to="/ForgetPassword" className="text-pink-500 text-sm">
             Forget Password ?
           </Link>
-          <button
+          <Button
+            color="secondary"
+            variant="flat"
             type="submit"
-            className="bg-pink-600  text-white py-2 rounded-full w-full flex justify-center items-center"
+            className="text-xl py-2 rounded-full w-full flex justify-center items-center"
           >
-            <span className="mr-2">Login </span>
+            <span className="mr-2">Sign In </span>
             <span>
               {loading && (
                 <svg
@@ -103,9 +110,9 @@ function Login() {
                 </svg>
               )}
             </span>
-          </button>
+          </Button>
         </form>
-      </div>
+      </motion.div>
       <div className="flex justify-center items-center gap-4 w-[90%] mx-auto">
         <NavLink
           to="/Register"

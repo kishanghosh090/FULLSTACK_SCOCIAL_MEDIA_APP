@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { getMessageSuccess, getMessageError } from "../../hooks/Popups.jsx";
+import { Button } from "@nextui-org/react";
 import { Toaster } from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
 import { baseUrl } from "../../baseUrl.js";
-
 
 function Register() {
   const navigate = useNavigate();
@@ -46,21 +47,25 @@ function Register() {
       .catch(async (error) => {
         setLoading(false);
         getMessageError(error.response.data.data);
-         setTimeout(() => {
+        setTimeout(() => {
           navigate("/login", { replace: true });
-        },1500);
+        }, 1200);
         return;
       });
   };
   return (
-    <div className="loginContainer flex flex-col gap-4 justify-center items-center h-screen ">
+    <div className="loginContainer flex flex-col gap-4 justify-center items-center h-screen bg-gradient-to-t from-pink-300 to-purple-300 ">
       <Toaster />
-      <div className="flex flex-col gap-4 bg-slate-200 w-[90%] text-black md:w-[30%] rounded-2xl shadow-xl">
+          <motion.div
+              initial={{ opacity: 0,transform: "translatex(-100px)" }}
+              animate={{ opacity: 1,transform: "translateX(0)" }}
+
+              className="flex flex-col gap-4 bg-[rgba(255,255,255,0.2] w-[90%] text-black md:w-[30%] rounded-3xl shadow-xl border-1 backdrop-blur-xl">
         <form
           onSubmit={handleSubmit}
           className="login flex flex-col gap-4 px-4 py-2"
         >
-          <h1 className="text-3xl text-center font-extrabold">Register</h1>
+          <h1 className="text-3xl text-center font-extrabold">Sign Up</h1>
           <label htmlFor="userName">User Name</label>
           <input
             type="text"
@@ -113,11 +118,13 @@ function Register() {
           <Link to="/login">
             <p className="text-left text-slate-500">Already have an account?</p>
           </Link>
-          <button
+          <Button
+            color="secondary"
+            variant="flat"
             type="submit"
-            className="bg-pink-600  text-white py-2 rounded-full w-full flex justify-center items-center"
+            className=" text-xl py-2 rounded-full w-full flex justify-center items-center"
           >
-            <span className="mr-2">Login</span>
+            <span className="mr-2">Sign Up</span>
             <span>
               {loading && (
                 <svg
@@ -142,9 +149,9 @@ function Register() {
                 </svg>
               )}
             </span>
-          </button>
+          </Button>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 }
