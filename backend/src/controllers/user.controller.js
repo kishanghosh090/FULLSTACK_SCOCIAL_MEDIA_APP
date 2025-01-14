@@ -1,6 +1,7 @@
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 // generate token
 const generateToken = async (userId, next) => {
@@ -179,16 +180,153 @@ const getUserProfile = async (req, res, next) => {
 };
 
 // update user profilePic controller
-const updateUserProfilePic = async (req, res, next) => {};
+const updateUserProfilePic = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
+
+    const avatarLocalPath = req.file.path;
+    if (!avatarLocalPath) {
+      return next(new ApiError(400, "Avatar is required"));
+    }
+    const avatar = await uploadOnCloudinary(avatarLocalPath);
+    if (!avatar) {
+      return next(new ApiError(500, "Avatar upload failed"));
+    }
+
+    // get user
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    // update user
+    user.avatar = avatar?.url;
+    await user.save({ validateBeforeSave: false });
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, user, "User profilePic updated successfully"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
 
 //update user username controller
-const updateUserUsername = async (req, res, next) => {};
+const updateUserUsername = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
+
+    const { username } = req.body;
+    if (!username) {
+      return next(new ApiError(400, "Username is required"));
+    }
+
+    // get user
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    // update user
+    user.username = username;
+    await user.save({ validateBeforeSave: false });
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, user, "User username updated successfully"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
 
 //update user phone number controller
-const updateUserPhonenumber = async (req, res, next) => {};
+const updateUserPhonenumber = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
+    const { phonenumber } = req.body;
+    if (!phonenumber) {
+      return next(new ApiError(400, "Phone number is required"));
+    }
+    // check for invalid phone number
+    if (phonenumber.length !== 10 || isNaN(phonenumber)) {
+      return next(new ApiError(400, "Phone number is invalid"));
+    }
+
+    // get user
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    // update user
+    user.phonenumber = phonenumber;
+    await user.save({ validateBeforeSave: false });
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, user, "User phone number updated"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
 
 //update user password controller
-const updateUserPassword = async (req, res, next) => {};
+const updateUserPassword = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
+
+    const { oldpassword, newpassword } = req.body;
+    if (!oldpassword || !newpassword) {
+      return next(
+        new ApiError(400, "Old password and new password are required")
+      );
+    }
+
+    // get user
+    const user = await User.findById(userId);
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    // check password
+    const isMatch = await user.isPasswordCorrect(oldpassword);
+    if (!isMatch) {
+      return next(new ApiError(400, "Old password is incorrect"));
+    }
+
+    // update user
+    user.password = newpassword;
+    await user.save({ validateBeforeSave: false });
+
+    // send response
+    res.status(200).json(new ApiResponse(200, user, "User password updated"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
 
 // forget password
 const forgetPassword = async (req, res, next) => {};

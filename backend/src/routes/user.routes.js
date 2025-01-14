@@ -12,7 +12,7 @@ import {
   updateUserPassword,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-
+import { upload } from "../middlewares/multer.middleware.js";
 const router = express.Router();
 
 // register route
@@ -26,7 +26,12 @@ router.get("/", verifyJWT, getUserProfile);
 
 // ---------- update user profile routes---------------------
 // update user profilePic route
-router.put("/updateUserProfilePic", updateUserProfilePic);
+router.put(
+  "/updateUserProfilePic",
+  verifyJWT,
+  upload.single("avatar"),
+  updateUserProfilePic
+);
 // update user username route
 router.put("/updateUserUsername", verifyJWT, updateUserUsername);
 // update user phone number route
