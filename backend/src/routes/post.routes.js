@@ -23,10 +23,11 @@ router.post("/createPost", verifyJWT, upload.single("image"), createPost);
 // delete post route
 router.delete("/deletePost/:id", verifyJWT, deletePost);
 // update post route
-router.put("/updatePost", verifyJWT, updatePost);
+router.put("/updatePost", verifyJWT, upload.single("image"), updatePost);
 // get post route
 router.get("/getAllPost", getAllPost);
-// like post route
+
+// -------------like post route----------------
 router.put("/likeOrUnlikePost", verifyJWT, likeOrUnlikePost);
 // comment post route
 router.post("/commentPost", verifyJWT, createComment);
