@@ -88,9 +88,60 @@ const deletePost = async (req, res, next) => {
 };
 
 // update post controller
-const updatePost = async (req, res, next) => {};
+const updatePost = async (req, res, next) => {
+  try {
+    const userId = req.user;
+
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
+    const { title, description } = req.body;
+    const { id } = req.params;
+
+    // get post
+    const post = await Post.findById(id);
+    if (!post) {
+      return next(new ApiError(404, "Post not found"));
+    }
+
+    // if update image
+    const imageLocalPath = req?.file?.path;
+    if (imageLocalPath) {
+      const image = await uploadOnCloudinary(imageLocalPath);
+      if (!image) {
+        return next(new ApiError(500, "Image upload failed"));
+      }
+      post.image = image?.url;
+    }
+
+    // update post
+    post.title = title;
+    post.description = description;
+    await post.save({ validateBeforeSave: false });
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, post, "Post updated successfully"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
 
 // get post controller
-const getAllPost = async (req, res, next) => {};
+const getAllPost = async (req, res, next) => {
+  try {
+    // get all posts
+    const posts = await Post.find().sort({ createdAt: -1 }).populate("user");
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, posts, "All posts fetched successfully"));
+  } catch (error) {
+    return next(new ApiError(400, error.message || "Internal Server Error"));
+  }
+};
 
 export { createPost, deletePost, updatePost, getAllPost };
