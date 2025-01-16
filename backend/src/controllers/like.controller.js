@@ -1,3 +1,6 @@
+import { Post } from "../models/post.models.js";
+import { ApiError } from "../utils/ApiError.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
 // like post controller
 const likeOrUnlikePost = async (req, res, next) => {
   try {
@@ -5,7 +8,7 @@ const likeOrUnlikePost = async (req, res, next) => {
     const { whichPostToLike } = req.params;
 
     // check is user authenticated
-    if (!userLikesAnotherPost) {
+    if (!userWhoLikesAnotherPost) {
       return next(new ApiError(401, "Unauthorized"));
     }
     //get post

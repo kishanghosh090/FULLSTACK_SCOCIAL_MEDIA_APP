@@ -335,7 +335,9 @@ const updateUserPassword = async (req, res, next) => {
 };
 
 // forget password
-const forgetPassword = async (req, res, next) => {};
+const forgetPassword = async (req, res, next) => {
+  
+};
 
 export {
   register,
