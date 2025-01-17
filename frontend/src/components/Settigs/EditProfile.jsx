@@ -6,11 +6,12 @@ import { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { useEffect } from "react";
 
+
 function EditProfile() {
   const [loading, setLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [updateImage, setUpdateImage] = useState({
-    image: null,
+    avatar: null,
   });
   const [userName, setUserName] = useState("");
   const [fullName, setFullName] = useState("");
@@ -42,14 +43,14 @@ function EditProfile() {
 
   const updateAvatar = async (e) => {
     e.preventDefault();
-    if (!updateImage.image) {
+    if (!updateImage.avatar) {
       getMessageError("Please select Your New Avatar");
       return;
     }
 
     setLoading(true);
     axios
-      .post(`/api/v1/users/editProfilePic`, updateImage, {
+      .put(`/api/v1/user/updateUserProfilePic`, updateImage, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -73,7 +74,7 @@ function EditProfile() {
       return;
     }
     axios
-      .post(`/api/v1/users/editUserName`, userNameData)
+      .put(`/api/v1/user/updateUserUsername`, userNameData)
       .then((res) => {
         getMessageSuccess(res.data.message);
         return;
@@ -83,23 +84,7 @@ function EditProfile() {
         return;
       });
   };
-  const changeFullName = async (e) => {
-    e.preventDefault();
-    if (fullNameData.fullName === "") {
-      getMessageError("New Full Name is required");
-      return;
-    }
-    axios
-      .post(`/api/v1/users/editFullName`, fullNameData)
-      .then((res) => {
-        getMessageSuccess(res.data.message);
-        return;
-      })
-      .catch((err) => {
-        getMessageError(err.response.data.message);
-        return;
-      });
-  };
+  
   return (
     <div>
       <Toaster />
@@ -150,7 +135,7 @@ function EditProfile() {
               name="image"
               id="image"
               onChange={(e) => {
-                setUpdateImage({ ...updateImage, image: e.target.files[0] });
+                setUpdateImage({ ...updateImage, avatar: e.target.files[0] });
                 setImage(e.target.files[0]);
               }}
             />
