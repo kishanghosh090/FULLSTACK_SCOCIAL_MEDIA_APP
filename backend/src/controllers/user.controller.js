@@ -2,6 +2,8 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { User } from "../models/user.models.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import generateOTP from "../utils/generateOTP.js";
+import sendEmail from "../utils/sendMail.js";
 
 // generate token
 const generateToken = async (userId, next) => {
@@ -171,7 +173,7 @@ const getUserProfile = async (req, res, next) => {
     }
 
     // get user
-    const user = await User.findById(userId);
+    const user = await User.findById(userId).populate("posts");
     if (!user) {
       return next(new ApiError(404, "User not found"));
     }
@@ -334,9 +336,69 @@ const updateUserPassword = async (req, res, next) => {
   }
 };
 
+// get otp controller
+const getOTP = async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return next(new ApiError(400, "Email is required"));
+    }
+
+    // get user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    // generate otp
+    const OTP = generateOTP();
+
+    // send otp to user
+    await sendEmail(OTP, email);
+    user.OTP = OTP;
+    await user.save({ validateBeforeSave: false });
+
+    // send response
+    res.status(200).json(new ApiResponse(200, user, "OTP sent successfully"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
+
 // forget password
 const forgetPassword = async (req, res, next) => {
-  
+  try {
+    const { email, OTP, newPassword } = req.body;
+    if (!email || !OTP) {
+      return next(new ApiError(400, " OTP is required"));
+    }
+    if (!newPassword) {
+      return next(new ApiError(400, "New password is required"));
+    }
+
+    // get user
+    const user = await User.findOne({ email });
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    // check otp
+    if (user.OTP !== OTP) {
+      return next(new ApiError(400, "OTP is incorrect"));
+    }
+
+    // update user
+    user.OTP = null;
+    user.password = newPassword;
+    await user.save({ validateBeforeSave: false });
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, user, "OTP verified successfully"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
 };
 
 export {
@@ -348,5 +410,6 @@ export {
   updateUserUserName,
   updateUserPhoneNumber,
   updateUserPassword,
+  getOTP,
   forgetPassword,
 };

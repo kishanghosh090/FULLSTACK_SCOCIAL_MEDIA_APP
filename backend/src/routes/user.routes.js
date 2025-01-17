@@ -10,6 +10,7 @@ import {
   updateUserUserName,
   updateUserPhoneNumber,
   updateUserPassword,
+  getOTP,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -38,7 +39,8 @@ router.put("/updateUserUsername", verifyJWT, updateUserUserName);
 router.put("/updateUserPhonenumber", verifyJWT, updateUserPhoneNumber);
 // update user password route
 router.put("/updateUserPassword", verifyJWT, updateUserPassword);
-
+// get otp route
+router.post("/getOTP", getOTP);
 // forget password route---------
 router.post("/forgetPassword", forgetPassword);
 export default router;

@@ -36,7 +36,7 @@ function Login() {
       .then((res) => {
         setLoading(false);
         getMessageSuccess("user login successfully");
-        navigate("/home", { replace: true });
+        navigate("/Home", { replace: true });
         console.log(res);
         return;
       })

@@ -44,6 +44,9 @@ const userSchema = new mongoose.Schema(
         ref: "Post",
       },
     ],
+    OTP: {
+      type: String,
+    },
   },
   {
     timestamps: true,
