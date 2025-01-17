@@ -10,6 +10,17 @@ export default defineConfig({
       },
     },
   },
+
+  rewrites: [
+    {
+      source: "/api/va/(.*)",
+      destination: "https://fullstack-scocial-media-app.onrender.com/$1",
+    },
+    {
+      source: "/(.*)",
+      destination: "/",
+    },
+  ],
   build: {
     outDir: "dist",
     emptyOutDir: true,
