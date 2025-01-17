@@ -5,12 +5,14 @@ import react from "@vitejs/plugin-react";
 export default defineConfig({
   server: {
     proxy: {
-      "/api/v1": {
-        target: "http://localhost:8080",
+      "/api": {
+        target: "https://fullstack-scocial-media-app.onrender.com",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
 
- 
   plugins: [react()],
 });
