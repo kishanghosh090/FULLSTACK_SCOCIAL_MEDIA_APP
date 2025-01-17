@@ -6,11 +6,11 @@ export default defineConfig({
   server: {
     proxy: {
       "/api": {
-        // target: "https://fullstack-scocial-media-app.onrender.com",
-        target: "http://localhost:8080",
-        // changeOrigin: true,
-        // secure: false,
-        // rewrite: (path) => path.replace(/^\/api/, ""),
+        target: "https://fullstack-scocial-media-app.onrender.com",
+        // target: "http://localhost:8080",
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },
