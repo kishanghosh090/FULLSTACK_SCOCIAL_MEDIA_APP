@@ -45,6 +45,8 @@ function Register() {
       })
       .catch(async (error) => {
         setLoading(false);
+        console.log(error);
+
         getMessageError(error.response.data.message);
         return;
       });
