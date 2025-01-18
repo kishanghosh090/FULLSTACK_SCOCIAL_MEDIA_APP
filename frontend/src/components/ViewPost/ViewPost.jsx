@@ -6,8 +6,10 @@ import { getMessageError, getMessageSuccess } from "../../hooks/Popups.jsx";
 import { Toaster } from "react-hot-toast";
 
 import BottomNav from "../BottomNav/BottomNav.jsx";
+import Loader from "../Loader/Loader.jsx";
 
 function ViewPost() {
+  const [isOpen, setIsOpen] = useState(false);
   const [postData, setPostData] = useState([]);
   const [userData, setUserData] = useState([]);
 
@@ -15,14 +17,14 @@ function ViewPost() {
     axios
       .get(`/api/v1/user`)
       .then((res) => {
-        // console.log(res.data.data);
-
+        setIsOpen(true);
         setUserData(res.data.data);
         setUserData(res.data.data);
         getMessageSuccess(res.data.message);
         return;
       })
       .catch((err) => {
+        setIsOpen(true);
         getMessageError(err.response.data.message);
         console.log(err);
         return;
@@ -42,14 +44,19 @@ function ViewPost() {
   }, []);
 
   return (
-    <div>
-      <Toaster />
-      <Header data={userData} />
-      <div>
-        <PostCard postData={postData} />
-      </div>
-      <BottomNav />
-    </div>
+    <>
+      {!isOpen && <Loader />}
+      {isOpen && (
+        <div>
+          <Toaster />
+          <Header data={userData} />
+          <div>
+            <PostCard postData={postData} />
+          </div>
+          <BottomNav />
+        </div>
+      )}
+    </>
   );
 }
 

@@ -20,12 +20,14 @@ import axios from "axios";
 import Header from "../Header/Header.jsx";
 import BottomNav from "../BottomNav/BottomNav.jsx";
 import UserPost from "../Home/UserPost.jsx";
-// import UserPost from "../ProfilePage/UserPost.jsx";
+import Popup from "reactjs-popup";
+import CustomPopUpBox from "../CustomPopUpBox/CustomPopUpBox.jsx";
+import Loader from "../Loader/Loader.jsx";
 
 export default function ProfilePage() {
+  const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
   const [posts, setPosts] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   useEffect(() => {
     axios
@@ -39,6 +41,7 @@ export default function ProfilePage() {
       })
       .catch((err) => {
         console.log(err);
+        setIsOpen(true);
         alert(err?.response.data.message);
         window.location.href = "/Login";
         getMessageError(err?.response?.data.message);
@@ -49,11 +52,14 @@ export default function ProfilePage() {
 
   return (
     <>
+      {!isOpen && <Loader />}
       <Toaster />
       {isOpen && (
         <div>
           {/* header */}
           <Header data={data} />
+          {/* <CustomPopUpBox /> */}
+
           <div className="h-full bg-slate-100 flex flex-col gap-2 p-2 transition-opacity z-[5]">
             <Card className="py-4 mt-[7rem] relative bg-white dark:text-black flex flex-col items-center justify-center">
               <div className="edit w-full">
