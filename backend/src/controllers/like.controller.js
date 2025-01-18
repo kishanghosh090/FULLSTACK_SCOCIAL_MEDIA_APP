@@ -5,12 +5,13 @@ import { ApiResponse } from "../utils/ApiResponse.js";
 const likeOrUnlikePost = async (req, res, next) => {
   try {
     const userWhoLikesAnotherPost = req.user;
-    const { whichPostToLike } = req.params;
+    const { whichPostToLike } = req.body;
 
     // check is user authenticated
     if (!userWhoLikesAnotherPost) {
       return next(new ApiError(401, "Unauthorized"));
     }
+
     //get post
     const post = await Post.findById(whichPostToLike);
     if (!post) {
@@ -18,8 +19,10 @@ const likeOrUnlikePost = async (req, res, next) => {
     }
 
     // like or unlike logic
-    if (post.likes.includes(userWhoLikesAnotherPost)) {
-      post.likes.pull(userWhoLikesAnotherPost);
+    if (post.likes.includes(userWhoLikesAnotherPost._id.toString())) {
+      post.likes = post.likes.filter(
+        (userId) => userId.toString() !== userWhoLikesAnotherPost._id.toString()
+      );
       await post.save({ validateBeforeSave: false });
     } else {
       post.likes.push(userWhoLikesAnotherPost);

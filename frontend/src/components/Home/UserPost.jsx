@@ -8,7 +8,6 @@ import {
 import { NavLink } from "react-router-dom";
 
 export default function UserPost(postData) {
-  console.log(postData);
 
   return (
     <div className="pt-[1rem] px-3 pb-20">
