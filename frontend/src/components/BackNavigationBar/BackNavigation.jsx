@@ -3,7 +3,9 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 function BackNavigation(props) {
  
-
+console.log('====================================');
+console.log(props);
+console.log('====================================');
 
   const navigator = useNavigate();
   const goBack = () => {
@@ -11,7 +13,7 @@ function BackNavigation(props) {
   };
   return (
     <div
-      className="absolute top-0 left-0 bg-slate-100 justify-start px-5 py-4 text-black cursor-pointer w-full z-50 flex items-center"
+      className="fixed top-0 left-0 bg-slate-300 justify-start px-5 py-4 text-black cursor-pointer w-full z-50 flex items-center"
       id="back"
     >
       <span className="mr-5 text-xl border-2 p-1 rounded-full" onClick={goBack}>

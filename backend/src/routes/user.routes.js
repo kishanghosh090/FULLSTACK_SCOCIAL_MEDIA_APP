@@ -11,6 +11,7 @@ import {
   updateUserPhoneNumber,
   updateUserPassword,
   getOTP,
+  getFriendsProfile,
 } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -24,7 +25,7 @@ router.post("/login", login);
 router.get("/logout", verifyJWT, logout);
 // get user profile route
 router.get("/", verifyJWT, getUserProfile);
-
+router.get("/friendProfile/:id", verifyJWT, getFriendsProfile);
 // ---------- update user profile routes---------------------
 // update user profilePic route
 router.put(

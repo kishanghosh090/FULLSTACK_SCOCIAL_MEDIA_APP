@@ -10,8 +10,8 @@ import ForgetPassword from "./components/ForgetPassword/ForgetPassword.jsx";
 import ViewPost from "./components/ViewPost/ViewPost.jsx";
 import Settings from "./components/Settigs/Settings.jsx";
 import EditProfile from "./components/Settigs/EditProfile.jsx";
-import CreatePost  from "./components/CreatePost/CreatePost.jsx";
-
+import CreatePost from "./components/CreatePost/CreatePost.jsx";
+import GetFriendProfile from "./components/Frient/GetFriendProfile.jsx";
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     {/* <RouterProvider router={router} /> */}
@@ -28,6 +28,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
           <Route path="ViewChat" element={<Home />} />
           <Route path="Friends" element={<Home />} />
           <Route path="ViewPost" element={<ViewPost />} />
+          <Route path="ViewPost/:id" element={<GetFriendProfile />} />
           <Route path="CreatePost" element={<CreatePost />} />
         </Route>
         <Route path="/Settings" element={<Settings />} />

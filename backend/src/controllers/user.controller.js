@@ -186,6 +186,37 @@ const getUserProfile = async (req, res, next) => {
     return next(new ApiError(500, error.message || "Internal Server Error"));
   }
 };
+// get friends profile
+
+const getFriendsProfile = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const userId = req.user;
+
+    // check is user authenticated
+    if (!userId) {
+      return next(new ApiError(401, "Unauthorized"));
+    }
+    // get user
+    const user = await User.findById(id).populate("posts");
+    if (!user) {
+      return next(new ApiError(404, "User not found"));
+    }
+
+    if (id.toString() === userId._id.toString()) {
+      return res
+        .status(200)
+        .json(new ApiResponse(200, user, "you want get your profile"));
+    }
+
+    // send response
+    res
+      .status(200)
+      .json(new ApiResponse(200, user, "User profile fetched successfully"));
+  } catch (error) {
+    return next(new ApiError(500, error.message || "Internal Server Error"));
+  }
+};
 
 // update user profilePic controller
 const updateUserProfilePic = async (req, res, next) => {
@@ -406,6 +437,7 @@ export {
   login,
   logout,
   getUserProfile,
+  getFriendsProfile,
   updateUserProfilePic,
   updateUserUserName,
   updateUserPhoneNumber,
