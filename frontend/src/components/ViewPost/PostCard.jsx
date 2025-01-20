@@ -13,8 +13,11 @@ import CustomPopUpBox from "../CustomPopUpBox/CustomPopUpBox.jsx";
 import { useState } from "react";
 
 import { FaRegComments } from "react-icons/fa";
+import ZoomPic from "../ZoomPic/ZoomPic.jsx";
 
 export default function PostCard(postData) {
+  const [isZoomPic, setIsZoomPic] = useState(false);
+  const [zoomPicUrl, setZoomPicUrl] = useState("");
   const navigate = useNavigate();
   console.log("====================================");
   console.log(postData);
@@ -51,6 +54,17 @@ export default function PostCard(postData) {
           <CustomPopUpBox data={(data, setClose)} />
         </div>
       )}
+      {isZoomPic && (
+        <div>
+          <button
+            onClick={() => setIsZoomPic(false)}
+            className="btn fixed left-4 top-4 rounded-lg px-2 py-1 text-white  bg-red-600 z-[102]"
+          >
+            close
+          </button>
+          <ZoomPic img={zoomPicUrl} />
+        </div>
+      )}
       <div className="pt-[6rem] px-3 pb-20">
         {postData?.postData?.map((post) => {
           return (
@@ -77,6 +91,10 @@ export default function PostCard(postData) {
                   className="object-cover rounded-xl"
                   src={post.image}
                   width={270}
+                  onClick={() => {
+                    setIsZoomPic(true);
+                    setZoomPicUrl(post.image);
+                  }}
                 />
               </CardBody>
               <CardFooter className="py-2 description">

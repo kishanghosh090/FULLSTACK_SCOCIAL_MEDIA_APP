@@ -22,8 +22,11 @@ import BottomNav from "../BottomNav/BottomNav.jsx";
 import UserPost from "../Home/UserPost.jsx";
 
 import Loader from "../Loader/Loader.jsx";
+import ZoomPic from "../ZoomPic/ZoomPic.jsx";
 
 export default function ProfilePage() {
+  const [isZoomPic, setIsZoomPic] = useState(false);
+  const [zoomPicUrl, setZoomPicUrl] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState([]);
   const [posts, setPosts] = useState([]);
@@ -57,6 +60,17 @@ export default function ProfilePage() {
         <div>
           {/* header */}
           <Header data={data} />
+          {isZoomPic && (
+            <div>
+              <button
+                onClick={() => setIsZoomPic(false)}
+                className="btn fixed left-4 top-4 rounded-lg px-2 py-1 text-white  bg-red-600 z-[102]"
+              >
+                close
+              </button>
+              <ZoomPic img={zoomPicUrl} />
+            </div>
+          )}
 
           <div className="h-full bg-slate-100 flex flex-col gap-2 p-2 transition-opacity z-[5]">
             <Card className="py-4 mt-[7rem] relative bg-white dark:text-black flex flex-col items-center justify-center">
@@ -88,6 +102,11 @@ export default function ProfilePage() {
                   width={270}
                   height={250}
                   classNames="bg-cover"
+                  onClick={() => {
+                    setZoomPicUrl(`${data.avatar}`);
+
+                    setIsZoomPic(true);
+                  }}
                 />
               </CardBody>
               <CardHeader className="pb-0 pt-2 px-4 flex-col items-center justify-center z-[5]">
@@ -113,7 +132,6 @@ export default function ProfilePage() {
                 {data.userName}'s Activity
               </h1>
               <UserPost posts={posts} data={data} />
-              <h2></h2>
             </div>
           </div>
           <BottomNav />
