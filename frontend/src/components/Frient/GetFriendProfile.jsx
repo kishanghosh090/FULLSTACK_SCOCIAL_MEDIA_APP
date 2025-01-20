@@ -11,8 +11,12 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import UserPost from "../Home/UserPost";
 import BackNavigation from "../BackNavigationBar/BackNavigation";
+import ZoomPic from "../ZoomPic/ZoomPic";
+import Loader from "../Loader/Loader";
 
 function GetFriendProfile() {
+  const [isZoomPic, setIsZoomPic] = useState(false);
+  const [zoomPicUrl, setZoomPicUrl] = useState("");
   const [close, setClose] = useState(false);
   const [data, setData] = React.useState([]);
   const [posts, setPosts] = useState([]);
@@ -35,6 +39,18 @@ function GetFriendProfile() {
   }, []);
   return (
     <div>
+      {!close && <Loader />}
+      {isZoomPic && (
+        <div>
+          <button
+            onClick={() => setIsZoomPic(false)}
+            className="btn fixed left-4 top-4 rounded-lg px-2 py-1 text-white  bg-red-600 z-[102]"
+          >
+            close
+          </button>
+          <ZoomPic img={zoomPicUrl} />
+        </div>
+      )}
       {close && (
         <div>
           <BackNavigation data={data.userName} />
