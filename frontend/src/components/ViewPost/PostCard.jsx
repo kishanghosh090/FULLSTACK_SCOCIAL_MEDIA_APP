@@ -10,30 +10,30 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { BiSolidLike } from "react-icons/bi";
 import axios from "axios";
 import CustomPopUpBox from "../CustomPopUpBox/CustomPopUpBox.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { FaRegComments } from "react-icons/fa";
 import ZoomPic from "../ZoomPic/ZoomPic.jsx";
+import { use } from "react";
 
-export default function PostCard(postData) {
+export default function PostCard({ postData, userData }) {
+  const navigate = useNavigate();
   const [isZoomPic, setIsZoomPic] = useState(false);
   const [zoomPicUrl, setZoomPicUrl] = useState("");
-  const navigate = useNavigate();
-  console.log("====================================");
-  console.log(postData);
-  console.log("====================================");
+  const [likeColor, setLikeColor] = useState([]);
   const [close, setClose] = useState(false);
-  const [data, setData] = useState(null);
+  const [postIdForCommant, setPostIdForCommant] = useState("");
+  const [commentData, setCommentData] = useState([]);
+  useEffect(() => {
+    setLikeColor(postData);
+  });
   const likeHandle = (postCardId) => {
-    console.log("====================================");
-    console.log(postCardId);
-    console.log("====================================");
     axios
       .put(`/api/v1/post/likeOrUnlikePost`, {
         whichPostToLike: postCardId,
       })
       .then((res) => {
-        window.location.reload();
+        console.log(res.data.data);
         return;
       })
       .catch((err) => {
@@ -41,6 +41,7 @@ export default function PostCard(postData) {
       });
   };
   const handleFollow = () => {};
+
   return (
     <>
       {close && (
@@ -51,7 +52,7 @@ export default function PostCard(postData) {
           >
             close
           </button>
-          <CustomPopUpBox data={(data, setClose)} />
+          <CustomPopUpBox postId={postIdForCommant} data={commentData} />
         </div>
       )}
       {isZoomPic && (
@@ -66,7 +67,7 @@ export default function PostCard(postData) {
         </div>
       )}
       <div className="pt-[6rem] px-3 pb-20">
-        {postData?.postData?.map((post) => {
+        {postData?.map((post, index) => {
           return (
             <Card className="py-4 m-2 z-[5] px-2" key={post._id}>
               <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
@@ -108,16 +109,20 @@ export default function PostCard(postData) {
                   <BiSolidLike
                     style={{
                       color: `${
-                        post?.likes?.includes(post?.user._id) ? "red" : "black"
+                        likeColor[index]?.likes?.includes(likeColor[index]._id)
+                          ? "red"
+                          : ""
                       }`,
                     }}
                   />
-                  <span className="ml-2">{post?.likes?.length}</span>
+                  <span className="ml-2">{}</span>
                 </button>
                 <button
                   className="comment text-3xl"
                   onClick={() => {
                     setClose(true);
+                    setPostIdForCommant(post?._id);
+                    setCommentData(post?.comments);
                   }}
                 >
                   <FaRegComments />

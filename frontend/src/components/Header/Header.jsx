@@ -16,8 +16,6 @@ import { CiCirclePlus } from "react-icons/ci";
 import axios from "axios";
 
 export default function Header(data) {
-console.log(data.data.avatar);
-
   const navigator = useNavigate();
   const handleLogout = () => {
     axios

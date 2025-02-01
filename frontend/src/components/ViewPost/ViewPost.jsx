@@ -13,7 +13,6 @@ function ViewPost() {
   const [postData, setPostData] = useState([]);
   const [userData, setUserData] = useState([]);
 
-
   useEffect(() => {
     axios
       .get(`/api/v1/user`)
@@ -46,14 +45,13 @@ function ViewPost() {
 
   return (
     <>
-      
       {!isOpen && <Loader />}
       {isOpen && (
         <div>
           <Toaster />
           <Header data={userData} />
           <div>
-            <PostCard postData={postData} />
+            <PostCard postData={postData} userData={userData} />
           </div>
           <BottomNav />
         </div>
