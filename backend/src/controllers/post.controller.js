@@ -133,7 +133,13 @@ const updatePost = async (req, res, next) => {
 const getAllPost = async (req, res, next) => {
   try {
     // get all posts
-    const posts = await Post.find().sort({ createdAt: -1 }).populate("user");
+    const posts = await Post.find()
+      .sort({ createdAt: -1 })
+      .populate("user")
+      .populate({
+        path: "comments",
+        populate: { path: "user" },
+      });
 
     // send response
     res

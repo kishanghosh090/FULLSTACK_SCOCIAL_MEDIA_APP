@@ -25,7 +25,7 @@ const likeOrUnlikePost = async (req, res, next) => {
       );
       await post.save({ validateBeforeSave: false });
     } else {
-      post.likes.push(userWhoLikesAnotherPost);
+      post.likes.push(userWhoLikesAnotherPost._id.toString());
       await post.save({ validateBeforeSave: false });
     }
 

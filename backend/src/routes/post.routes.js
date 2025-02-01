@@ -30,7 +30,7 @@ router.get("/getAllPost", getAllPost);
 // -------------like post route----------------
 router.put("/likeOrUnlikePost", verifyJWT, likeOrUnlikePost);
 // comment post route
-router.post("/commentPost", verifyJWT, createComment);
+router.post("/commentPost/:whichPost", verifyJWT, createComment);
 // update comment route
 router.put("/updateComment", verifyJWT, updateComment);
 // delete comment route
